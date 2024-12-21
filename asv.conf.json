@@ -11,7 +11,8 @@
 
     // The URL or local path of the source code repository for the
     // project being benchmarked
-    "repo": "porepy",
+    // "repo": "porepy",
+    "repo": "git@github.com:pmgbergen/porepy.git",
 
     // The Python project's subdirectory in your repo.  If missing or
     // the empty string, the project is assumed to be located at the root
@@ -39,7 +40,7 @@
 
     // List of branches to benchmark. If not provided, defaults to "main"
     // (for git) or "default" (for mercurial).
-    "branches": ["asv_profiling"], // for git YZ: TO BE REPLACED WITH develop
+    "branches": ["develop"], // for git
     // "branches": ["default"],    // for mercurial
 
     // The DVCS being used.  If not set, it will be automatically
@@ -65,7 +66,7 @@
 
     // The Pythons you'd like to test against.  If not provided, defaults
     // to the current version of Python used to run `asv`.
-    // "pythons": ["3.11", "3.12"],
+    "pythons": ["3.11", "3.12"],
 
     // The list of conda channel names to be searched for benchmark
     // dependency packages in the specified order
@@ -146,7 +147,7 @@
 
     // The directory (relative to the current directory) that benchmarks are
     // stored in.  If not provided, defaults to "benchmarks"
-    "benchmark_dir": "porepy/benchmarks/benchmarks",
+    // "benchmark_dir": "benchmarks",
 
     // The directory (relative to the current directory) to cache the Python
     // environments in.  If not provided, defaults to "env"
