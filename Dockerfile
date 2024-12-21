@@ -41,8 +41,7 @@ RUN git config --global user.username "Profiling runner" && \
     git config --global user.email "none@none.com"
     
 # Make the script executable and initialize the cron job.
-RUN chmod +x ${APP_DIR}/job.sh && \
-    chmod +x ${APP_DIR}/entrypoint.sh && \
+RUN chmod +x ${APP_DIR}/entrypoint.sh && \
     # Create the crontab file
     mv ${APP_DIR}/crontab.sh /etc/cron.d/job-cron && \
     chmod 0644 /etc/cron.d/job-cron && \
