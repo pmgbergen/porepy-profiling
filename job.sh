@@ -7,7 +7,7 @@ echo "Pulling recent git changes"
 git pull origin main
 
 echo "Starting asv profiling"
-/usr/local/bin/asv run
+/usr/local/bin/asv run NEW --steps=10
 
 echo "Generating html report"
 /usr/local/bin/asv publish

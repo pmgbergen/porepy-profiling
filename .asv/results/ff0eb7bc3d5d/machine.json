@@ -1,0 +1,9 @@
+{
+    "arch": "x86_64",
+    "cpu": "12th Gen Intel(R) Core(TM) i5-1245U",
+    "machine": "ff0eb7bc3d5d",
+    "num_cpu": "12",
+    "os": "Linux 5.15.167.4-microsoft-standard-WSL2",
+    "ram": "7845040",
+    "version": 1
+}
