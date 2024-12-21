@@ -1,20 +1,32 @@
-FROM porepy/dev
+FROM porepy/dev:latest
 
-# Install cron and other dependencies
-RUN apt-get update && apt-get install -y cron && rm -rf /var/lib/apt/lists/*
+# Prevent interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Copy the job script into the container
-COPY my-cron-job.sh  /usr/local/bin/my-cron-job.sh
-RUN chmod +x /usr/local/bin/my-cron-job.sh
+# Create work directory
+WORKDIR /app
 
-# Add the cron job (runs at midnight every day)
-RUN echo "* * * * * /usr/local/bin/my-cron-job.sh" >> /etc/cron.d/my-cron-job
+# Install dependencies, set up the job, and clean up in a single layer
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends cron && \
+    # Clone the profiling repo
+    git clone https://github.com/pmgbergen/porepy-profiling.git /app/ && \
+    # Make the script executable
+    chmod +x /app/job.sh && \
+    # Create the crontab file
+    echo "* * * * * /app/job.sh >> /var/log/cron.log 2>&1" > /etc/cron.d/job-cron && \
+    chmod 0644 /etc/cron.d/job-cron && \
+    crontab /etc/cron.d/job-cron && \
+    # Create log file
+    touch /var/log/cron.log && \
+    # Clean up
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /tmp/* /var/tmp/*
 
-# Give execution rights to cron job
-RUN chmod 0644 /etc/cron.d/my-cron-job
+# Create an entry script
+RUN echo '#!/bin/sh\nservice cron start\nexec tail -f /var/log/cron.log' > /entrypoint.sh && \
+    chmod +x /entrypoint.sh
 
-# Apply cron jobs
-RUN crontab /etc/cron.d/my-cron-job
-
-# Start cron in the foreground
-CMD ["cron", "-f"]
+# Run the entry script using JSON format for proper signal handling
+CMD ["sh", "/entrypoint.sh"]
