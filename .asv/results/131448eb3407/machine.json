@@ -1,0 +1,9 @@
+{
+    "arch": "x86_64",
+    "cpu": "Intel Core Processor (Haswell, no TSX)",
+    "machine": "131448eb3407",
+    "num_cpu": "1",
+    "os": "Linux 5.15.0-122-generic",
+    "ram": "3986968",
+    "version": 1
+}
