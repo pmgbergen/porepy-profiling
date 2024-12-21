@@ -12,7 +12,7 @@
     // The URL or local path of the source code repository for the
     // project being benchmarked
     // "repo": "porepy",
-    "repo": "git@github.com:pmgbergen/porepy.git",
+    "repo": "https://github.com/pmgbergen/porepy.git",
 
     // The Python project's subdirectory in your repo.  If missing or
     // the empty string, the project is assumed to be located at the root
@@ -40,7 +40,7 @@
 
     // List of branches to benchmark. If not provided, defaults to "main"
     // (for git) or "default" (for mercurial).
-    "branches": ["develop"], // for git
+    "branches": ["asv_profiling"], // for git
     // "branches": ["default"],    // for mercurial
 
     // The DVCS being used.  If not set, it will be automatically
