@@ -1,18 +1,20 @@
 #!/bin/sh
 echo "Job running at: $(date)"
 
+cd /root/app
+
 echo "Pulling recent git changes"
-git pull
+git pull origin main
 
 echo "Starting asv profiling"
-asv run --python=same --quick --show-stderr --dry-run
+/usr/local/bin/asv run
 
 echo "Generating html report"
-asv publish
+/usr/local/bin/asv publish
 
 echo "Publishing updates on github"
-git add -A
-git commit -m "Profiling $(date)"
-git push
+git add .asv
+git commit -m "Profiling update"
+git push origin main
 
 echo "Job completed successfully"

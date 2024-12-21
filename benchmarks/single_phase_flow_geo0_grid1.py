@@ -1,7 +1,7 @@
 # asv run --python=same --quick --show-stderr --dry-run
 import porepy as pp
 import numpy as np
-from porepy.applications.profiling.run_profiling import make_benchmark_model
+from models_for_benchmarking import make_benchmark_model
 from argparse import Namespace
 
 
