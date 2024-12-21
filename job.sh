@@ -3,12 +3,16 @@ echo "Job running at: $(date)"
 
 cd /root/app
 
+export OPENBLAS_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export OMP_NUM_THREADS=1
+
 echo "Pulling recent git changes"
 git reset --hard main
 git pull origin main
 
 echo "Starting asv profiling"
-/usr/local/bin/asv run NEW --steps=10
+/usr/local/bin/asv run NEW --steps=10 --launch-method=spawn --show-stderr
 
 echo "Generating html report"
 /usr/local/bin/asv publish

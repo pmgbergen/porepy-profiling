@@ -1,13 +1,17 @@
 The report can be found here: https://pmgbergen.github.io/porepy-profiling/
 
-Check if benchmarks run:
+Test if benchmarks work correctly:
 
-`asv run --python=same --quick --show-stderr --dry-run`
+`asv run --python=same --quick --show-stderr --dry-run --launch-method=spawn --show-stderr`
 
 Actually run them:
 
-`asv run`
+`asv run --launch-method=spawn --show-stderr`
 
 Generate html report:
 
 `asv publish`
+
+Open report in browser:
+
+`asv preview`
