@@ -4,6 +4,7 @@ echo "Job running at: $(date)"
 cd /root/app
 
 echo "Pulling recent git changes"
+git reset --hard main
 git pull origin main
 
 echo "Starting asv profiling"
