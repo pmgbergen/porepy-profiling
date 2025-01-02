@@ -1,1 +1,1 @@
-{"regressions": []}
+{"regressions": [["poromechanics_geo0_grid1.PreSolve.time_pre_solve", "graphs/arch-x86_64/branch-asv_profiling/cpu-Intel Core Processor (Haswell, no TSX)/machine-131448eb3407/num_cpu-1/os-Linux 5.15.0-122-generic/python-3.12/ram-3986968/poromechanics_geo0_grid1.PreSolve.time_pre_solve.json", {"machine": "131448eb3407", "python": "3.12"}, null, 2.0603918998967856, 1.9238983229734004, [[null, 14483, 1.9238983229734004, 2.0603918998967856]]]]}
