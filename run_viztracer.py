@@ -9,13 +9,13 @@ Example (intended to show basic input and output functionality):
     # If not already installed, get viztracer:
     >>> pip install viztracer
     # Run the script:
-    >>> python run_profiler.py --physics poromechanics --geometry 0 --grid_refinement 0
+    >>> python run_viztracer.py --physics poromechanics --geometry 0 --grid_refinement 0
     # This will run a single-phase poromechanics benchmark on the first 2D case with the
     # coarsest grid refinement.
-    >>> python run_profiler.py --physics flow --geometry 1 --grid_refinement 2
+    >>> python run_viztracer.py --physics flow --geometry 1 --grid_refinement 2
     # This will run a single-phase flow benchmark on the second 2D case with the finest
     # grid refinement.
-    >>> python run_profiler.py --physics poromechanics --geometry 2 --grid_refinement 2
+    >>> python run_viztracer.py --physics poromechanics --geometry 2 --grid_refinement 2
     # This will run a single-phase poromechanics benchmark on a 3D grid with the finest
     # grid refinement.
 
