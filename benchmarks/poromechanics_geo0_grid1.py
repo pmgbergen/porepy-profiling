@@ -1,12 +1,11 @@
 import porepy as pp
 import numpy as np
-from porepy.applications.profiling.run_profiling import make_benchmark_model
-from argparse import Namespace
+from benchmarks.model_setups import make_benchmark_model
 
 
 def make_model():
     return make_benchmark_model(
-        Namespace(**{"geometry": 0, "grid_refinement": 1, "physics": "poromechanics"})
+        {"geometry": 0, "grid_refinement": 1, "physics": "poromechanics"}
     )
 
 

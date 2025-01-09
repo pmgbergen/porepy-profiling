@@ -12,7 +12,7 @@ git reset --hard main
 git pull origin main
 
 echo "Starting asv profiling"
-/usr/local/bin/asv run NEW --steps=10 --launch-method=spawn --show-stderr
+/usr/local/bin/asv run 2eade74a9441050215920da28370e1d701f800fd..develop --steps=10 --skip-existing-commits --launch-method=spawn --show-stderr
 
 echo "Generating html report"
 /usr/local/bin/asv publish
