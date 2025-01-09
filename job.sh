@@ -1,4 +1,8 @@
 #!/bin/sh
+
+# This script is executed once in a while via cron. Commiting and pushing changes to it
+# should be enough for cron to fetch it (tested).
+
 echo "Job running at: $(date)"
 
 cd /root/app
@@ -7,8 +11,9 @@ export OPENBLAS_NUM_THREADS=1
 export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=1
 
+# Updating the porepy-profiling repo.
 echo "Pulling recent git changes"
-git reset --hard main
+git reset --hard main  # This is a safeguard if something unexpected happens.
 git pull origin main
 
 echo "Starting asv profiling"
@@ -20,7 +25,7 @@ echo "Generating html report"
 # Folder to check
 FOLDER_TO_CHECK=".asv/"
 
-# Check for changes
+# Check for changes. Only commit and push if the new report entries appeared.
 if git status --porcelain | grep -q -e "^ M  $FOLDER_TO_CHECK" -e "^?? $FOLDER_TO_CHECK"; then
     echo "Publishing updates on github"
     git add .asv
