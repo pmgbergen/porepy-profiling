@@ -2,3 +2,5 @@
 __pycache__
 PorePy
 .asv/env
+*.vtu
+*.pvd
