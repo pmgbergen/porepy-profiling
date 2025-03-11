@@ -4,3 +4,8 @@ PorePy
 .asv/env
 *.vtu
 *.pvd
+
+*.prof
+*.lprof
+*.msh
+*.geo_unrolled
