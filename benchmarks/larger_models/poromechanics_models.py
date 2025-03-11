@@ -74,7 +74,7 @@ class ConstraintLineSearchNonlinearSolver(
 
 if __name__ == "__main__":
     T_end = 1
-    if True:
+    if False:
         time_manager = pp.TimeManager(
             dt_init=0.1,
             schedule=[0, T_end],
@@ -96,9 +96,9 @@ if __name__ == "__main__":
     if True:
         print(" ")
         print(" -------------- Starting 2d case --------------------")
-        T_end = 1e4
+        T_end = 2e3
         time_manager = pp.TimeManager(
-            dt_init=0.1 * T_end,
+            dt_init=0.5 * T_end,
             schedule=[0, T_end],
             constant_dt=True,
         )
@@ -107,9 +107,10 @@ if __name__ == "__main__":
             "material_constants": {"solid": solid_constants},
             "nonlinear_solver": ConstraintLineSearchNonlinearSolver,
         }
-
+        tic = time()
         # Run the 2d case
         many_fracs = Poromechanics2dManyFracs(params=many_frac_params)
         pp.run_time_dependent_model(
             model=many_fracs,
         )
+        print(f"Elapsed time in time loop: {time() - tic:.2f} s")
