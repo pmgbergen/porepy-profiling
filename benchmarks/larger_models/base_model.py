@@ -23,12 +23,16 @@ class TimeMeasurements:
     granular_assembly: dict = field(default_factory=dict)
 
     full_discretization: float = 0
+    rediscretization: float = 0
     set_equations: float = 0
     set_geometry: float = 0
     linear_solve: float = 0
     visualization: float = 0
 
     discretization_parameters: float = 0
+    before_nonlinear_iteration: float = 0
+    after_nonlinear_iteration: float = 0
+    check_nonlinear_convergence: float = 0
 
 
 class TimedSolutionStrategy(pp.SolutionStrategy):
@@ -73,7 +77,7 @@ class TimedSolutionStrategy(pp.SolutionStrategy):
         unique_discr = _ad_utils.uniquify_discretization_list(discr)
 
         self._discretize_from_list(unique_discr)
-        self._timings.full_discretization = time() - full_time
+        self._timings.full_discretization += time() - full_time
 
     def rediscretize(self):
         tic = time()
@@ -82,7 +86,7 @@ class TimedSolutionStrategy(pp.SolutionStrategy):
             self.nonlinear_discretizations
         )
         self._discretize_from_list(unique_discr)
-        self._timings.full_discretization += time() - tic
+        self._timings.rediscretization += time() - tic
 
     def solve_linear_system(self):
         tic = time()
@@ -132,12 +136,46 @@ class TimedSolutionStrategy(pp.SolutionStrategy):
 
     def before_nonlinear_loop(self):
         print(f"Time: {self.time_manager.time:.2f} of {self.time_manager.time_final}")
-
         super().before_nonlinear_loop()
+
+    def before_nonlinear_iteration(self):
+        tic = time()
+        super().before_nonlinear_iteration()
+        self._timings.before_nonlinear_iteration += time() - tic
+
+    def after_nonlinear_iteration(self, nonlinear_increment):
+        tic = time()
+        super().after_nonlinear_iteration(nonlinear_increment)
+        self._timings.after_nonlinear_iteration += time() - tic
+
+    def check_convergence(
+        self,
+        nonlinear_increment: np.ndarray,
+        residual,
+        reference_residual: np.ndarray,
+        nl_params,
+    ):
+        tic = time()
+        # In addition to the standard check, print the iteration number, increment and
+        # residual.
+        prm = super().check_convergence(
+            nonlinear_increment, residual, reference_residual, nl_params
+        )
+        nl_incr = self.nonlinear_solver_statistics.nonlinear_increment_norms[-1]
+        res_norm = self.nonlinear_solver_statistics.residual_norms[-1]
+        s = f"Newton iter: {self.nonlinear_solver_statistics.num_iteration} "
+        s += f"Increment: {nl_incr:.2e}, Residual: {res_norm:.2e}"
+        print(s)
+
+        self._timings.check_nonlinear_convergence += time() - tic
+        return prm
 
     def assemble_linear_system(self):
         # This is copied from EquationSystem!
-        # Be aware that the equation system is assem
+        # Be aware that the equation system is assemled twice, once by a standard
+        # assembly (all equations) and once by a granular assembly (equation by
+        # equation). The granular assembly is used to measure the time spent on each
+        # equation.
 
         equation_system = self.equation_system
 
@@ -168,7 +206,6 @@ class TimedSolutionStrategy(pp.SolutionStrategy):
 
         tic = time()
         ad_list: list[pp.ad.AdArray] = equation_system.evaluate(eqs, True, None)
-        self._timings.full_assembly.append(time() - tic)
 
         for row, equ_name, ad in zip(rows, equ_blocks, ad_list):
             if row is not None:
@@ -203,6 +240,8 @@ class TimedSolutionStrategy(pp.SolutionStrategy):
         # Multiply rhs by -1 to move to the rhs.
         column_projection = equation_system.projection_to(variables).transpose()
         self.linear_system = (A * column_projection, -rhs_cat)
+
+        self._timings.full_assembly.append(time() - tic)
 
         # Granular timings
         tm = self._timings.granular_assembly
@@ -261,10 +300,25 @@ class TimedSolutionStrategy(pp.SolutionStrategy):
         )
         print("")
 
+        print(
+            f"Before nonlinear iteration time: {self._timings.before_nonlinear_iteration:.2e}"
+        )
+        print("")
+
         print(f"Linear solve time: {self._timings.linear_solve:.2e}")
         print("")
 
         print(f"Visualization time: {self._timings.visualization:.2e}")
+        print("")
+
+        print(
+            f"After nonlinear iteration time: {self._timings.after_nonlinear_iteration:.2e}"
+        )
+        print("")
+
+        print(
+            f"Check nonlinear convergence time: {self._timings.check_nonlinear_convergence:.2e}"
+        )
         print("")
 
         num_assemblies = len(self._timings.full_assembly)
@@ -313,6 +367,8 @@ class TimedSolutionStrategy(pp.SolutionStrategy):
 
         print("")
         print(f"Full discretization time: {self._timings.full_discretization:.2e}")
+        print(f"Rediscretization time: {self._timings.rediscretization:.2e}")
+        print("")
 
         discretization_sorted = sorted(
             self._timings.granular_discretization.keys(),
