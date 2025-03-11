@@ -9,3 +9,9 @@ PorePy
 *.lprof
 *.msh
 *.geo_unrolled
+
+*endstate*
+stats*
+times.json
+result.json
+*.swp
